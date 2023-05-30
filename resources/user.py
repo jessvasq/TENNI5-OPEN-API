@@ -45,4 +45,29 @@ def register():
             "message": 'Success, user successfully created '
         })
         
-        
+
+'''LOGIN ROUTE'''  
+'''Route handler for a POST request at the '/login' route of the User model. When accessed, it retrieves the login data from the request payload, checks if a user with the provided email exists, checks the password, logs in the user if the credentials are correct, and returns a JSON response indicating the success or failure of the login process.'''
+
+
+@user.route('/login', methods=["POST"])
+def login():
+    payload = request.get_json()
+    print('payload:', payload)
+    #find the user by their email
+    try: 
+        user = models.User.get(models.User.email == payload['email']) 
+        user_dict = model_to_dict(user) #user found --> convert the user models to a dictionary 
+        if(check_password_hash(user_dict['password'], payload['password'])):#use bcrypt to check if the input password matches the pw stored in the database
+            del user_dict['password'] #deletes the pw
+            login_user(user) #starts the session and log in  
+            print("user found:", user)
+            return jsonify(data=user_dict, 
+                           status={
+                               "code":200,
+                               "message": "You have successfully logged in!"
+                               })
+        else: 
+            return jsonify(data={}, status={"code": 401, "message":"Try again! Username or password is incorrect" })
+    except models.DoesNotExist:
+        return jsonify(data={}, status={"code": 401, "message": "Username does not exist. Please create an account"})
