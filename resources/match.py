@@ -52,3 +52,38 @@ def get_all_matches():
                 "message": "Error pulling the data"
             }
         )
+
+
+'''SHOW ROUTE'''
+
+'''Route handler for a GET request at the '/<id>' route of the app. When accessed, it captures the id value from the URL, retrieves the corresponding match' object from the database, prints information about the retrieved match' object, converts it to a dictionary, and returns a JSON response containing the matches's data, along with a success message and a status code of 200.'''
+
+
+@match.route('/<id>', methods=['GET'])
+def get_match(id): #accepts "id" as param
+    print(id, "id") 
+    match = models.Match.get_by_id(id) #fetches a 'match' object with the corresponding id from the database
+    print(match.__dict__) #prints "match" dictionary
+    return jsonify(
+        data=model_to_dict(match), #converts "match" object to a dictionary
+        status=200,
+        message='Sucess'
+    ), 200    
+
+
+
+'''UPDATE ROUTE'''
+
+''' Route handler for a PUT request at the '/<id>' route of the app. When accessed, it captures the id value from the URL, retrieves the corresponding match object from the database, updates it with the data provided in the request payload, and returns a JSON response containing the updated match's data, along with a success message and a status code of 200.'''
+
+
+@match.route('/<id>', methods=['PUT'])
+def update_match(id): #accepts id parameter 
+    payload = request.get_json() #retieves the JSON from the request
+    match_found = models.Match.update(**payload).where(models.Match.id==id)#update method is applied to the "match" object with the same id. This object is then assigned to the match_found variable
+    match_found.execute() #executes the updates 
+    return jsonify( #returns a JSON response 
+        data=model_to_dict(models.Match.get_by_id(id)),
+        status=200, 
+        message='match updated successfully'
+    )
