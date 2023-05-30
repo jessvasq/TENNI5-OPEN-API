@@ -1,12 +1,29 @@
 #import all from peewee
 from peewee import *
 import datetime
+from flask_login import UserMixin
 
 
 #need to update this and connect to our production database postgres
 DATABASE = SqliteDatabase('tenni5.sqlite')
 
 
+     
+'''USER MODEL'''    
+class User(UserMixin, Model):
+    username = CharField(unique=True) #each username/email should be unique within the database
+    email = CharField(unique=True)
+    password = CharField()    
+    
+    #user will use the same database as the match model 
+    class Meta: 
+        database = DATABASE 
+     
+     
+     
+
+'''TENNIS MATCH MODEL'''
+           #the 'Model' in the Dog class argument is a class from Peewee that gives the ability to talk to our sql database
 class Match(Model):
     id = AutoField(primary_key=True)
     image = CharField()
@@ -21,12 +38,12 @@ class Match(Model):
 
     class Meta:
         database = DATABASE
+           
         
 #initialize, set our datatables
-
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([Match], safe=True)
+    DATABASE.create_tables([User, Match], safe=True)
     print('Tables created')
     DATABASE.close()
 
