@@ -32,6 +32,7 @@ match = Blueprint('matches', 'match')
 #         ), 201
   
 @match.route('/', methods=['POST'])
+@login_required
 def create_match():
     payload = request.get_json() #retrieves the request as JSON format 
     new_match = models.Match.create(
@@ -116,6 +117,7 @@ def get_match(id): #accepts "id" as param
 
 
 @match.route('/<id>', methods=['PUT'])
+@login_required
 def update_match(id): #accepts id parameter 
     payload = request.get_json() #retieves the JSON from the request
     query = models.Match.update(**payload).where(models.Match.id==id)#update method is applied to the "match" object with the same id. This object is then assigned to the query variable
@@ -132,6 +134,7 @@ def update_match(id): #accepts id parameter
 
 
 @match.route('/<id>', methods=['Delete'])
+@login_required
 def delete_match(id):
     query = models.Match.delete().where(models.Match.id==id)
     query.execute()
