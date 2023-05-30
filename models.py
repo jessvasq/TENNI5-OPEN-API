@@ -23,14 +23,15 @@ class User(UserMixin, Model):
      
 
 '''TENNIS MATCH MODEL'''
-           #the 'Model' in the Dog class argument is a class from Peewee that gives the ability to talk to our sql database
+           #the 'Model' in the Match class argument is a class from Peewee that gives the ability to talk to our sql database
 class Match(Model):
     id = AutoField(primary_key=True)
     image = CharField()
     description = CharField()
     location = CharField()
     date = DateField()
-    host_name = CharField()
+    #host_name = CharField()
+    host_name = ForeignKeyField(User, backref='my_matches')#we use 'my_matches' on ana instance of a User to list all matches associated with a single user 
     players=CharField()
     skill_level=CharField()
     price = CharField()
