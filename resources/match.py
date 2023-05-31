@@ -68,7 +68,7 @@ def get_all_matches():
         print(matches)
         return jsonify(data=matches, status={
             "code":200, 
-            "message": "Success! All matches have been retrieved"
+            "message": f"Success! All matches have been retrieved. Total matches: {len(matches)}"
         })
     except models.DoesNotExist: # #if there are no matches in the database, it returns a JSON response with: 
         return jsonify(
@@ -120,7 +120,7 @@ def get_match(id): #accepts "id" as param
 @login_required
 def update_match(id): #accepts id parameter 
     payload = request.get_json() #retieves the JSON from the request
-    query = models.Match.update(**payload).where(models.Match.id==id)#update method is applied to the "match" object with the same id. This object is then assigned to the query variable
+    query = models.Match.update(**payload).where((models.Match.id==id) & (models.Match.host_name == current_user))#update method is applied to the "match" object with the same id & username. This object is then assigned to the query variable
     query.execute() #executes the updates 
     return jsonify( #returns a JSON response 
         data=model_to_dict(models.Match.get_by_id(id)),
@@ -133,15 +133,26 @@ def update_match(id): #accepts id parameter
 '''Route handler for a DELETE request at the '/<id>' route of the app. When accessed, it captures the id value from the URL, constructs a delete query to remove the corresponding match object from the database, and returns a JSON response indicating the success of the deletion, along with a success message and a status code of 200.'''
 
 
+# @match.route('/<id>', methods=['Delete'])
+# @login_required
+# def delete_match(id):
+#     query = models.Match.delete().where(models.Match.id==id)
+#     query.execute()
+#     return jsonify(
+#         data="match successfully deleted",
+#         status=200, 
+#         message='match deleted successfully'
+#     ), 200
+    
+#need to figure out how to delete 
+
 @match.route('/<id>', methods=['Delete'])
 @login_required
 def delete_match(id):
-    query = models.Match.delete().where(models.Match.id==id)
+    query = models.Match.delete().where((models.Match.id==id) & (models.Match.host_name == current_user))
     query.execute()
     return jsonify(
         data="match successfully deleted",
         status=200, 
         message='match deleted successfully'
     ), 200
-    
-    
