@@ -63,7 +63,7 @@ def create_match():
 @match.route('/')
 def get_all_matches():
     try:
-        matches=[model_to_dict(match) for match in models.Match.select()] #.select() finds/retrieves all the matches on our model. It iterates over the 
+        matches=[model_to_dict(match) for match in models.Match.select().where(models.Match.host_name != current_user)] #.select() finds/retrieves all the matches on our model. It iterates over the 
        #result and converts each match object to a dictionary and the result is stored in the 'matches' variable as a list of dictionaries
         print(matches)
         return jsonify(data=matches, status={
@@ -156,3 +156,61 @@ def delete_match(id):
         status=200, 
         message='match deleted successfully'
     ), 200
+    
+    
+    
+'''MY MATCHES'''   
+
+# @match.route('/mymatches')
+# def get_all_my_matches():
+#     match_dict = [model_to_dict(match) for match in current_user.my_matches]
+#     return jsonify({
+#         "data": match_dict, 
+#         "message": f"Successfully found {len(match_dict)} matches", 
+#         "status": 200
+#     }), 200
+
+@match.route('/mymatches')
+def get_all_my_matches():
+    try:
+        matches=[model_to_dict(match) for match in models.Match.select().where(models.Match.host_name == current_user)] #.select() finds/retrieves all the matches on our model. It iterates over the 
+       #result and converts each match object to a dictionary and the result is stored in the 'matches' variable as a list of dictionaries
+        print(matches)
+        return jsonify(data=matches, status={
+            "code":200, 
+            "message": f"Success! All matches have been retrieved. Total matches: {len(matches)}"
+        })
+    except models.DoesNotExist: # #if there are no matches in the database, it returns a JSON response with: 
+        return jsonify(
+            data={}, # an empty data object
+            status={
+                "code": 401, #an error mssg
+                "message": "Error pulling the data"
+            }
+        )
+    
+'''POST'''
+
+  
+@match.route('/mymatches', methods=['POST'])
+@login_required
+def add_match():
+    payload = request.get_json() #retrieves the request as JSON format 
+    new_match = models.Match.create(
+        image=payload['image'],
+        description=payload['description'],
+        location=payload['location'],
+        date=payload['date'],
+        host_name=current_user.id,
+        players=payload['players'],
+        skill_level=payload['skill_level'],
+        price=payload['price']
+        )
+    match_dict = model_to_dict(new_match)#converts object to dictionary and assigns to match_dict variable 
+    
+    return jsonify(
+        data=match_dict, 
+        message= "Match has been succesfully added to wishlist", 
+        status=201, 
+    ), 201
+  
