@@ -7,8 +7,7 @@ from flask_login import UserMixin
 #need to update this and connect to our production database postgres
 DATABASE = SqliteDatabase('tenni5.sqlite')
 
-
-     
+    
 '''USER MODEL'''    
 class User(UserMixin, Model):
     username = CharField(unique=True) #each username/email should be unique within the database
@@ -30,16 +29,17 @@ class Match(Model):
     description = CharField()
     location = CharField()
     date = DateField()
-    #host_name = CharField()
+    username = CharField()
     host_name = ForeignKeyField(User, backref='my_matches')#we use 'my_matches' on ana instance of a User to list all matches associated with a single user 
     players=CharField()
     skill_level=CharField()
     price = CharField()
+    is_in_my_matches = BooleanField(default=False)
     created_at = DateTimeField(default=datetime.datetime.now)
 
     class Meta:
         database = DATABASE
-           
+
         
 #initialize, set our datatables
 def initialize():

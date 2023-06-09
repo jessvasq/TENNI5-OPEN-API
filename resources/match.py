@@ -40,10 +40,12 @@ def create_match():
         description=payload['description'],
         location=payload['location'],
         date=payload['date'],
+        username=payload['username'],
         host_name=current_user.id,
         players=payload['players'],
         skill_level=payload['skill_level'],
-        price=payload['price']
+        price=payload['price'],
+        is_in_my_matches=False
         )
     match_dict = model_to_dict(new_match)#converts object to dictionary and assigns to match_dict variable 
     
@@ -62,8 +64,8 @@ def create_match():
 
 @match.route('/')
 def get_all_matches():
-    try:
-        matches=[model_to_dict(match) for match in models.Match.select().where(models.Match.host_name != current_user)] #.select() finds/retrieves all the matches on our model. It iterates over the 
+    try:                                                 #testing......where(models.Match.host_name != current_user)
+        matches=[model_to_dict(match) for match in models.Match.select().where((models.Match.host_name != current_user) & (models.Match.is_in_my_matches == False))] #.select() finds/retrieves all the matches on our model. It iterates over the 
        #result and converts each match object to a dictionary and the result is stored in the 'matches' variable as a list of dictionaries
         print(matches)
         return jsonify(data=matches, status={
@@ -200,11 +202,13 @@ def add_match():
         image=payload['image'],
         description=payload['description'],
         location=payload['location'],
+        username=payload['username'],
         date=payload['date'],
         host_name=current_user.id,
         players=payload['players'],
         skill_level=payload['skill_level'],
-        price=payload['price']
+        price=payload['price'],
+        is_in_my_matches=True
         )
     match_dict = model_to_dict(new_match)#converts object to dictionary and assigns to match_dict variable 
     
@@ -213,4 +217,22 @@ def add_match():
         message= "Match has been succesfully added to wishlist", 
         status=201, 
     ), 201
-  
+
+
+'''DELETE ROUTE'''
+
+'''Route handler for a DELETE request at the '/<id>' route of the app. When accessed, it captures the id value from the URL, constructs a delete query to remove the corresponding match object from the database, and returns a JSON response indicating the success of the deletion, along with a success message and a status code of 200.'''
+
+
+@match.route('/mymatches/<id>', methods=['Delete'])
+@login_required
+def delete_my_match(id):
+    query = models.Match.delete().where((models.Match.id==id) & (models.Match.host_name == current_user))
+    query.execute()
+    return jsonify(
+        data="match successfully deleted",
+        status=200, 
+        message='match deleted successfully'
+    ), 200
+    
+    
