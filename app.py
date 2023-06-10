@@ -6,7 +6,8 @@ from flask_login import LoginManager
 import models
 from resources.match import match
 from resources.user import user
-
+#chat
+from resources.chat import chat
 
 DEBUG=True
 PORT=8000
@@ -59,6 +60,15 @@ app.register_blueprint(match, url_prefix='/tenni5open')
 #setting up cors to allow react to connect to the API
 CORS(user, origins=['http://localhost:3000'], supports_credentials=True) #support_credentials=True, let us send cookies back and forth 
 app.register_blueprint(user, url_prefix='/user')
+
+
+#####CHAT 
+
+'''SET UP CORS: CHAT'''
+#setting up cors to allow react to connect to the API
+CORS(chat, origins=['http://localhost:3000'], supports_credentials=True) #support_credentials=True, let us send cookies back and forth 
+app.register_blueprint(chat, url_prefix='/chat')
+
 
 
 @app.route('/')
