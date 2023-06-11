@@ -8,6 +8,8 @@ from resources.match import match
 from resources.user import user
 #chat
 from resources.chat import chat
+#videos
+from resources.videos import video
 
 DEBUG=True
 PORT=8000
@@ -70,6 +72,10 @@ CORS(chat, origins=['http://localhost:3000'], supports_credentials=True) #suppor
 app.register_blueprint(chat, url_prefix='/chat')
 
 
+
+'''SET UP CORS: VIDEOS'''
+CORS(video, origins=['http://localhost:3000'], supports_credentials=True) #support_credentials=True, let us send cookies back and forth 
+app.register_blueprint(video, url_prefix='/tenni5open/tutorials')
 
 @app.route('/')
 def hello():
