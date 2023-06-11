@@ -10,6 +10,8 @@ from resources.user import user
 from resources.chat import chat
 #videos
 from resources.videos import video
+#equipment 
+from resources.equipment import equipment
 
 DEBUG=True
 PORT=8000
@@ -75,11 +77,15 @@ app.register_blueprint(user, url_prefix='/user')
 CORS(chat, origins=['http://localhost:3000'], supports_credentials=True) #support_credentials=True, let us send cookies back and forth 
 app.register_blueprint(chat, url_prefix='/chat')
 
-
+#####################################
 
 '''SET UP CORS: VIDEOS'''
 CORS(video, origins=['http://localhost:3000'], supports_credentials=True) #support_credentials=True, let us send cookies back and forth 
 app.register_blueprint(video, url_prefix='/tutorials')
+
+'''SET UP CORS: EQUIPMENT'''
+CORS(equipment, origins=['http://localhost:3000'], supports_credentials=True) #support_credentials=True, let us send cookies back and forth 
+app.register_blueprint(equipment, url_prefix='/equipment')
 
 @app.route('/')
 def hello():

@@ -59,6 +59,7 @@ class Message(Model):
     class Meta: 
         database = DATABASE
 
+###################### FEATURES ###########################
 
 DATABASE1 = SqliteDatabase('media.sqlite')
 
@@ -74,6 +75,18 @@ class Video(Model):
         database = DATABASE1
 
 
+'''Equipment MODEL'''
+class Equipment(Model):
+    id = AutoField(primary_key=True)
+    category = CharField()
+    store = CharField()
+    image = CharField()
+    description = CharField()
+    created_at = DateTimeField(default=datetime.datetime.now)
+
+    class Meta:
+        database = DATABASE1
+        
 
 #initialize, set our datatables
 def initialize():
@@ -81,7 +94,7 @@ def initialize():
     DATABASE1.connect()
     DATABASE.create_tables([User, Match, Conversation, Message, Video], safe=True)
     print('Tables created')
-    DATABASE1.create_tables([Video], safe=True)
+    DATABASE1.create_tables([Video, Equipment], safe=True)
     print('Media tables created')
     DATABASE.close()
     DATABASE1.close()
