@@ -11,7 +11,7 @@ chat = Blueprint('chats', 'chat')
 
 '''GET ROUTE -- retrieves mssgs'''
 '''Selects and retrieves all messages where the conversation_id matches the specific convo'''
-@chat.route('/<conversation_id>', methods=['GET'])
+@chat.route('/newmessage/<conversation_id>', methods=['GET'])
 def get_mssg(conversation_id): 
     try:                                                 
         messages=[model_to_dict(chat) for chat in models.Message.select().where((models.Message.conversation == conversation_id))]
