@@ -43,13 +43,17 @@ def load_user(user_id):
 def before_request():
     #assign the values of models.DATABASE to 'g.db'
     g.db=models.DATABASE
+     #assign the values of models.DATABASE to 'g.db'
+    g.db_1=models.DATABASE1
     #opens a connection when a request starts
     g.db.connect()
+    g.db_1.connect()
 
 #close the db connection after the response is returned
 @app.after_request
 def after_request(response): 
     g.db.close()
+    g.db_1.close()
     return response 
 
 '''SET UP CORS: TENNIS MATCH'''
@@ -75,7 +79,7 @@ app.register_blueprint(chat, url_prefix='/chat')
 
 '''SET UP CORS: VIDEOS'''
 CORS(video, origins=['http://localhost:3000'], supports_credentials=True) #support_credentials=True, let us send cookies back and forth 
-app.register_blueprint(video, url_prefix='/tenni5open/tutorials')
+app.register_blueprint(video, url_prefix='/tutorials')
 
 @app.route('/')
 def hello():

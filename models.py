@@ -79,7 +79,7 @@ class Video(Model):
 def initialize():
     DATABASE.connect()
     DATABASE1.connect()
-    DATABASE.create_tables([User, Match, Conversation, Message], safe=True)
+    DATABASE.create_tables([User, Match, Conversation, Message, Video], safe=True)
     print('Tables created')
     DATABASE1.create_tables([Video], safe=True)
     print('Media tables created')
