@@ -12,6 +12,8 @@ from resources.chat import chat
 from resources.videos import video
 #equipment 
 from resources.equipment import equipment
+#lessons
+from resources.lesson import lesson
 
 DEBUG=True
 PORT=8000
@@ -82,6 +84,14 @@ app.register_blueprint(chat, url_prefix='/chat')
 '''SET UP CORS: VIDEOS'''
 CORS(video, origins=['http://localhost:3000'], supports_credentials=True) #support_credentials=True, let us send cookies back and forth 
 app.register_blueprint(video, url_prefix='/tutorials')
+
+
+
+'''SET UP CORS: LESSON'''
+CORS(lesson, origins=['http://localhost:3000'], supports_credentials=True) #support_credentials=True, let us send cookies back and forth 
+app.register_blueprint(lesson, url_prefix='/lessons')
+
+
 
 '''SET UP CORS: EQUIPMENT'''
 CORS(equipment, origins=['http://localhost:3000'], supports_credentials=True) #support_credentials=True, let us send cookies back and forth 
