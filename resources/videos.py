@@ -70,4 +70,15 @@ def get_video(id): #accepts "id" as param
     ), 200    
 
 
+'''DELETE'''
 
+@video.route('/<id>', methods=['Delete'])
+def delete_video(id):
+    query = models.Video.delete().where(models.Video.id==id)
+    query.execute()
+    return jsonify(
+        data="video successfully deleted",
+        status=200, 
+        message='video deleted successfully'
+    ), 200
+    
