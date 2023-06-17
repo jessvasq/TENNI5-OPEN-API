@@ -1,4 +1,4 @@
-# TENNI5-OPEN--Frontend
+# TENNI5-OPEN--Backend
 Capstone Project. 
 
 Tenni5 Open was a vision that was created over the lack of exposure and familiarity with the sport of tennis within the US. Despite much attention and maketing placed with the US Open after all was set and done the sport cleared away, and for starters like myself it was hard to find fellow beginners that would share the same excitment and determination to grow as players.  
