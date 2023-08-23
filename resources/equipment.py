@@ -72,3 +72,28 @@ def get_equipment(id): #accepts "id" as param
 
 
 
+'''UPDATE ROUTE'''
+@equipment.route('/<id>', methods=['PUT'])
+def update_equipment(id): #accepts id parameter 
+    payload = request.get_json() #retieves the JSON from the request
+    query = models.Equipment.update(**payload).where((models.Equipment.id==id))#update method is applied to the "equipment" object with the same id 
+    query.execute() #executes the updates 
+    return jsonify( #returns a JSON response 
+        data=model_to_dict(models.Equipment.get_by_id(id)),
+        status=200, 
+        message='equipment updated successfully'
+    ), 200
+    
+
+'''DELETE ROUTE'''
+
+@equipment.route('/<id>', methods=['Delete'])
+def delete_equipment(id):
+    query = models.Equipment.delete().where((models.Equipment.id==id))
+    query.execute()
+    return jsonify(
+        data="equipment successfully deleted",
+        status=200, 
+        message='equipment deleted successfully'
+    ), 200
+    
