@@ -16,7 +16,7 @@ from resources.equipment import equipment
 #lessons
 from resources.lesson import lesson
 
-DEBUG=True
+DEBUG=False
 PORT=8000
 
 
