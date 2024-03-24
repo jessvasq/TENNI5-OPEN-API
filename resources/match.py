@@ -14,23 +14,6 @@ match = Blueprint('matches', 'match')
 '''Route handler for a POST request at the root path ("/") of the app. When accessed, it retrieves the JSON payload from the request, creates a new match object in the database with the provided data, prints information about the created match object, converts it to a dictionary, and returns a JSON response containing the match's data and a success message'''
 
 
-# @match.route('/', methods=['POST'])
-# def create_match():
-#     payload=request.get_json()
-#     print(type(payload), 'payload')
-#     new_match = models.Match.create(**payload)
-#     #print object
-#     print(new_match.__dict__)
-#     print(dir(new_match)) #prints all the methods and attributes of the match object
-#     #change model to dictionary
-#     print(model_to_dict(new_match), 'dictionary')
-#     match_dict = model_to_dict(new_match) #assigns the converted dictionary of the match object to the match_dict variable.
-#     return jsonify(
-#         data=match_dict,
-#         message="Successfully created",
-#         status=201
-#         ), 201
-  
 @match.route('/', methods=['POST'])
 @login_required
 def create_match():
@@ -63,6 +46,7 @@ def create_match():
 '''route handler for a GET request at the root path ("/") of the app. When accessed, it retrieves all the matches from the database, converts them to dictionaries, prints them to the console, and returns a JSON response containing the matches' data and a success message. If there are no matches in the database, it returns an error response.'''
 
 @match.route('/')
+@login_required
 def get_all_matches():
     try:                                                 #testing......where(models.Match.host_name != current_user)
         matches=[model_to_dict(match) for match in models.Match.select().where((models.Match.host_name != current_user) & (models.Match.is_in_my_matches == False))] #.select() finds/retrieves all the matches on our model. It iterates over the 
@@ -82,18 +66,6 @@ def get_all_matches():
         )
 
 
-# @match.route('/')
-# def get_all_matches():
-#     match_dict = [model_to_dict(match) for match in current_user.my_matches]
-#     return jsonify({
-#         "data":match_dict, 
-#         "message": f"Successfully found {len(match_dict)} matches", 
-#         "status": 200
-#     }), 200
-
-
-
-
 
 '''SHOW ROUTE - show a specific "match"''' 
 
@@ -101,6 +73,7 @@ def get_all_matches():
 
 
 @match.route('/<id>', methods=['GET'])
+@login_required
 def get_match(id): #accepts "id" as param
     print(id, "id") 
     match = models.Match.get_by_id(id) #fetches a 'match' object with the corresponding id from the database
@@ -134,20 +107,6 @@ def update_match(id): #accepts id parameter
 
 '''Route handler for a DELETE request at the '/<id>' route of the app. When accessed, it captures the id value from the URL, constructs a delete query to remove the corresponding match object from the database, and returns a JSON response indicating the success of the deletion, along with a success message and a status code of 200.'''
 
-
-# @match.route('/<id>', methods=['Delete'])
-# @login_required
-# def delete_match(id):
-#     query = models.Match.delete().where(models.Match.id==id)
-#     query.execute()
-#     return jsonify(
-#         data="match successfully deleted",
-#         status=200, 
-#         message='match deleted successfully'
-#     ), 200
-    
-#need to figure out how to delete 
-
 @match.route('/<id>', methods=['Delete'])
 @login_required
 def delete_match(id):
@@ -163,16 +122,8 @@ def delete_match(id):
     
 '''MY MATCHES'''   
 
-# @match.route('/mymatches')
-# def get_all_my_matches():
-#     match_dict = [model_to_dict(match) for match in current_user.my_matches]
-#     return jsonify({
-#         "data": match_dict, 
-#         "message": f"Successfully found {len(match_dict)} matches", 
-#         "status": 200
-#     }), 200
-
 @match.route('/mymatches')
+@login_required
 def get_all_my_matches():
     try:
         matches=[model_to_dict(match) for match in models.Match.select().where(models.Match.host_name == current_user)] #.select() finds/retrieves all the matches on our model. It iterates over the 
@@ -192,8 +143,6 @@ def get_all_my_matches():
         )
     
 '''POST'''
-
-  
 @match.route('/mymatches', methods=['POST'])
 @login_required
 def add_match():
@@ -222,8 +171,6 @@ def add_match():
 '''DELETE ROUTE'''
 
 '''Route handler for a DELETE request at the '/<id>' route of the app. When accessed, it captures the id value from the URL, constructs a delete query to remove the corresponding match object from the database, and returns a JSON response indicating the success of the deletion, along with a success message and a status code of 200.'''
-
-
 @match.route('/mymatches/<id>', methods=['Delete'])
 @login_required
 def delete_my_match(id):

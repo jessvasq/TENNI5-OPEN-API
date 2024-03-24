@@ -2,7 +2,7 @@ import models
 
 from flask import request, jsonify, Blueprint
 from flask_bcrypt import generate_password_hash, check_password_hash
-from flask_login import login_user, current_user, logout_user
+from flask_login import login_user, current_user, logout_user, login_required
 from playhouse.shortcuts import model_to_dict
 
 #User blueprint 
@@ -53,15 +53,20 @@ def register():
 @user.route('/login', methods=["POST"])
 def login():
     payload = request.get_json()
-    print('payload:', payload)
+
+    #check if all required fields are present in the payload
+    if 'email' not in payload or 'password' not in payload:
+        return jsonify(data={}, status={"code": 400, "message": "Missing email or password in request"})
+
     #find the user by their email
     try: 
         user = models.User.get(models.User.email == payload['email']) 
         user_dict = model_to_dict(user) #user found --> convert the user models to a dictionary 
         if(check_password_hash(user_dict['password'], payload['password'])):#use bcrypt to check if the input password matches the pw stored in the database
+            login_user(user) #starts the session and securely log in the user
+            #remove any sensitive data from the user dictionary 
             del user_dict['password'] #deletes the pw
-            login_user(user) #starts the session and log in  
-            print("user found:", user)
+      
             return jsonify(data=user_dict, 
                            status={
                                "code":200,
@@ -75,8 +80,8 @@ def login():
 
 
 '''LOGOUT ROUTE'''
-
 @user.route('/logout')
+@login_required
 def logout():
     logout_user()
     return jsonify(
