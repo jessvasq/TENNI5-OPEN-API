@@ -20,7 +20,7 @@ DEBUG=False
 PORT=8000
 
 
-#initialize instance of the Flask class
+#initialize instance of the Flask class, starts the app
 app = Flask(__name__)
 
 '''USER SESSION'''
@@ -33,14 +33,14 @@ app.secret_key = secret_key
 #set up the session in the app 
 login_manager.init_app(app)
 
-@login_manager.user_loader #load the user object whenever we access the session. It takes the unicode ID of a user, and return the corresponding user object.
+#load the user object whenever we access the session. It takes the unicode ID of a user, and return the corresponding user object
+@login_manager.user_loader 
 def load_user(user_id):
     try: 
         return models.User.get(models.User.id == user_id)
     except models.DoesNotExist:
         return None
 
-''''''
 
 #set up a database connection before a request
 #g global access to our database 
@@ -48,7 +48,7 @@ def load_user(user_id):
 def before_request():
     #assign the values of models.DATABASE to 'g.db'
     g.db=models.DATABASE
-     #assign the values of models.DATABASE to 'g.db'
+    #assign the values of models.DATABASE to 'g.db'
     g.db_1=models.DATABASE1
     #opens a connection when a request starts
     g.db.connect()
@@ -62,8 +62,9 @@ def after_request(response):
     return response 
 
 '''SET UP CORS: TENNIS MATCH'''
-#CORS - let us communicate with our frontend, frontend can send HTTP requests
-CORS(match, origins=['http://localhost:3000'], supports_credentials=True) #allow cookies to be sent to the server
+#CORS - let us communicate with our frontend, frontend can send HTTP (CRUD) requests
+CORS(match, origins=['http://localhost:3000'], supports_credentials=True) #allow cookies to be sent to the server. Cookies are important in authentication and authorization processes. After a user logs in, a session cookie is used to maintain their authenticated state, allowing them to access restricted areas of the app without needing to log in again for each request. 
+
 #set up the prefix for every route in our match resource 
 app.register_blueprint(match, url_prefix='/tenni5open')
 

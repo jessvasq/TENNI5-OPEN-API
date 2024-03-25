@@ -2,7 +2,7 @@ import models
 from flask import Blueprint, jsonify, request
 
 from playhouse.shortcuts import model_to_dict
-
+#flask_login allows us to set up user sessions
 from flask_login import current_user, login_required
 
 #blueprints record operations to execute when registered on an app 
@@ -15,6 +15,7 @@ match = Blueprint('matches', 'match')
 
 
 @match.route('/', methods=['POST'])
+#login_required decorator, requires users to be logged in to access a certain route
 @login_required
 def create_match():
     payload = request.get_json() #retrieves the request as JSON format 

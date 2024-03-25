@@ -4,6 +4,7 @@ from flask import request, jsonify, Blueprint
 from flask_bcrypt import generate_password_hash, check_password_hash
 from flask_login import login_user, current_user, logout_user, login_required
 from playhouse.shortcuts import model_to_dict
+from datetime import datetime, timedelta
 
 #User blueprint 
 user = Blueprint('users', 'user', url_prefix='/user')
@@ -52,18 +53,22 @@ def register():
 
 @user.route('/login', methods=["POST"])
 def login():
+    #retrieve the json from the route
     payload = request.get_json()
 
     #check if all required fields are present in the payload
     if 'email' not in payload or 'password' not in payload:
         return jsonify(data={}, status={"code": 400, "message": "Missing email or password in request"})
 
-    #find the user by their email
+    #Query to search by email 
     try: 
         user = models.User.get(models.User.email == payload['email']) 
         user_dict = model_to_dict(user) #user found --> convert the user models to a dictionary 
-        if(check_password_hash(user_dict['password'], payload['password'])):#use bcrypt to check if the input password matches the pw stored in the database
-            login_user(user) #starts the session and securely log in the user
+        
+        #use bcrypt to check if the input password matches the pw stored in the database. Returns True or False depending on whther our hash's match
+        if(check_password_hash(user_dict['password'], payload['password'])):
+            #starts the session and securely log in the user
+            login_user(user) 
             #remove any sensitive data from the user dictionary 
             del user_dict['password'] #deletes the pw
       
@@ -78,9 +83,9 @@ def login():
         return jsonify(data={}, status={"code": 401, "message": "Username does not exist. Please create an account"})
 
 
-
 '''LOGOUT ROUTE'''
 @user.route('/logout')
+#login_required decorator, requires users to be logged in to access a certain route
 @login_required
 def logout():
     logout_user()
