@@ -18,8 +18,3 @@ Tenni5 Open extends a warm welcome to people of all ages and skill levels, encou
 
 ## WIREFRAMES
 ![Tenni5 Open Wireframes](https://github.com/jessvasq/TENNI5-OPEN--Backend/assets/119137671/a241f2ed-8973-4d6b-816f-4d6fef87cb56)
-
-## USER STORIES ## 
-* A user can utilize a search bar to input their location and view a list of available matches. This feature allows the user to select specific matches and access more detailed information.
-* To enhance a user's overall experience, they have the option to create an account and log in, granting them the capability to both host and join tennis matches of interest. Once logged in, the user has access to a comprehensive list of available matches, including those they are hosting, for easy management, editing, or deletion. Specific match details, including descriptions, locations, opponent levels, match types, date & time, and the number of players are available for registered users.
-* If a user does not have an account, they still can explore information related to tennis, access tennis tutorials, and grand slam highlights, and visit a page featuring a thoughtfully curated equipment list 
